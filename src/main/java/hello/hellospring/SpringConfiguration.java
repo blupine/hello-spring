@@ -1,24 +1,32 @@
 package hello.hellospring;
 
-import hello.hellospring.Repository.JdbcMemberRepository;
-import hello.hellospring.Repository.JdbcTemplateMemberRepository;
-import hello.hellospring.Repository.MemberRepository;
-import hello.hellospring.Repository.MemoryMemberRepository;
+import hello.hellospring.Repository.*;
 import hello.hellospring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 @Configuration
 public class SpringConfiguration {
     //@Autowired private DataSource dataSource;
-    private DataSource dataSource;
+//    private DataSource dataSource;
+//    @Autowired
+//    public SpringConfiguration(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//    }
+    EntityManager em;
     @Autowired
-    public SpringConfiguration(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public SpringConfiguration(EntityManager em) {
+        this.em = em;
     }
+
+    // 원래는 아래처럼 받는게 스펙
+    //@PersistenceContext
+    //private EntityManager em;
 
     @Bean
     public MemberService memberService(){
@@ -30,6 +38,7 @@ public class SpringConfiguration {
     public MemberRepository memberRepository(){
 //        return new MemoryMemberRepository();
 //        return new JdbcMemberRepository(dataSource);
-        return new JdbcTemplateMemberRepository(dataSource);
+//        return new JdbcTemplateMemberRepository(dataSource);
+        return new JpaMemberRepository(em);
     }
 }
